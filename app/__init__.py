@@ -1,7 +1,9 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-
 from app import views, utils
+from config.config import settings
 
-settings = utils.load_json('config/config.json')
+app.config['SQLALCHEMY_DATABASE_URI'] = settings['DATABASE_URL']
+db = SQLAlchemy(app)
