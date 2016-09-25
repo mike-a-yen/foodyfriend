@@ -1,5 +1,7 @@
 from app import app
+import time
 
 @app.route('/')
 def hello():
-    return 'Hello World!'
+    now = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
+    return 'Hello World!<br>{}'.format(now)
