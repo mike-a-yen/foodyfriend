@@ -1,3 +1,5 @@
 from app import app
+import os
 
-app.run(debug=True)
+PORT = int(os.environ['PORT'])
+app.run(port=PORT,debug=True)
