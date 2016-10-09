@@ -1,6 +1,6 @@
 import json
 from . import login_manager
-from models import User
+from .models import User
 
 def load_json(fname):
     with open(fname,'r') as f:
