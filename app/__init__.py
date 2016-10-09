@@ -13,4 +13,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/mayen/Programming/food
 app.config['SECRET_KEY'] = 'secret'
 db = SQLAlchemy(app)
 
-from app import views, utils
+from app import views, utils, user_views

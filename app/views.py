@@ -1,6 +1,6 @@
 from app import app, db, login_manager
 import flask
-from flask_login import login_user, login_required
+from flask_login import login_user, login_required, logout_user
 import flask_login
 from datetime import datetime
 from .models import User, Recipes, Ingredients
@@ -69,6 +69,11 @@ def edit_profile():
     db.session.commit()
     return flask.redirect(flask.request.args.get('next') or flask.url_for('profile'))
     
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return flask.redirect('/login')
 
 @login_manager.user_loader
 def load_user(id):
