@@ -1,9 +1,10 @@
 from . import db
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 class User(db.Model):
     __tablename__ = 'user'
-    
+    __hash__ = 'pbkdf2:sha256:1000'
     id = db.Column('user_id',db.Integer, primary_key=True)
     email = db.Column('email',db.String(120), unique=True)
     password = db.Column('password',db.String(120))
@@ -12,7 +13,7 @@ class User(db.Model):
     
     def __init__(self, email, password, name=''):
         self.email = email
-        self.password = password
+        self.password = generate_password_hash(password,method=self.__hash__)
         self.registered_on = datetime.utcnow()
         self.name = name
         
@@ -28,44 +29,78 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
+    def check_password(self,password):
+        return check_password_hash(self.password, password)
+    
     def __repr__(self):
         return '<User %r - est. %s>' % (self.email,self.registered_on.isoformat())
     
-class Recipes(db.Model):
-    __tablename__ = 'recipes'
+class Review(db.Model):
+    __tablename__ = 'reviews'
     
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-        
-    def __init__(self, name):
-        self.name = name
-
-
-class Ingredients(db.Model):
-    __tablename__ = 'ingredients'
+    id = db.Column('id',db.Integer, primary_key=True)
+    funny = db.Column('funny',db.Integer)
+    useful = db.Column('useful',db.Integer)
+    cool = db.Column('cool',db.Integer)
+    user_id = db.Column('user_id',db.String(80))
+    review_id = db.Column('review_id',db.String(80))
+    stars = db.Column('stars',db.Integer)
+    date = db.Column('date',db.DateTime)
+    text = db.Column('text',db.Text)
+    type = db.Column('type',db.String(80))
+    business_id = db.Column('business_id',db.String(80))
     
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-        
-    def __init__(self, name):
+    def __init__(self, votes, user_id, review_id, stars, date, text, type, business_id):
+        self.funny = votes.get('funny',0)
+        self.useful = votes.get('useful',0)
+        self.cool = votes.get('cool',0)
+        self.user_id = user_id
+        self.review_id = review_id
+        self.stars = stars
+        self.date = date
+        self.text = text
+        self.type = type
+        self.business_id = business_id
+
+
+class Business(db.Model):
+    __tablename__ = 'business'
+
+    id = db.Column('id',db.Integer, primary_key=True)
+    business_id = db.Column('business_id',db.String(80))
+    full_address = db.Column('full_address', db.String(120))
+    #TODO: hours = db.Column() Mon-Sun
+    open = db.Column('open', db.Boolean)
+    #TODO: categories = db.Column() maybe worth making a new table
+    city = db.Column('city', db.String(80))
+    state = db.Column('state',db.String(80))
+    name = db.Column('name', db.String(80))
+    stars = db.Column('stars',db.Float)
+    review_count = db.Column('review_count', db.Integer)
+    #TODO: neighborhoods = db.Column()
+    lon = db.Column('lon',db.Float)
+    lat = db.Column('lat',db.Float)
+    #TODO attributes
+    #TODO ambience
+    price_range = db.Column('price_range', db.Integer)
+    type = db.Column('type', db.String(80))
+    
+    def __init__(self, business_id, full_address, open, city, state, name,
+                 stars, review_count, longitude, latitude, price_range, type):
+
+        self.business_id = business_id 
+        self.full_address = full_address
+        self.open = open
+        self.city = city
+        self.state = state
         self.name = name
+        self.stars = stars
+        self.review_count = review_count
+        self.lon = longitude
+        self.lat = latitude
+        self.price_range = price_range
+        self.type = type
 
-class RecipeIngredients(db.Model):
-    __tablename__ = 'recipe_ingredients'
-
-    id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column('recipe_id',db.Integer)
-    ingredient_id = db.Column('ingredient_id',db.Integer)
-    amount = db.Column('amount',db.Float)
-    units = db.column('units',db.String(80))
-
-    def __init__(self, recipe_id, ingredient_id, amount, units):
-        self.recipe_id = recipe_id
-        self.ingredient_id = ingredient_id
-        self.amount = amount
-        self.units = units
-
-
-
+    
 print('Creating DB')
 db.create_all()
