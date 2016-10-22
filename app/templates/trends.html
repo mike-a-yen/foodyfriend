@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container">
+  <h2>Search Yelp Review Trends </h2>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <p>Search by:</p>
+      <form action="" method=post class="form">
+	<div class="form-group">
+	  <div class="control-group">
+	    <div class="controls">
+	      {% if current_state %}
+	      <select class="selectpicker show-tick"
+		      name="state"
+		      title={{ current_state }}
+		      data-live-search="true"
+		      onchange="this.form.submit()"
+		      multiple>
+		{% else %}
+		<select class="selectpicker show-tick"
+			name="state"
+			title="Select State"
+			data-live-search="true"
+			onchange="this.form.submit()"
+			multiple>
+		  {% endif %}	  
+		  {%- for state in states %}
+		  {% if state == current_state %}
+		  <option value="{{ state }}"
+			  selected="selected">{{ state }}</option>
+		  {% else %}
+		  <option value="{{ state }}">{{ state }}</option>
+		  {% endif %}
+		  {%- endfor %}
+		</select>
+	    </div>
+	  </div>
+	  
+	  <div class="control-group">
+	    <div class="controls">
+	      {% if current_city %}
+	      <select class="selectpicker show-tick"
+		      name="city"
+		      title={{ current_city }}
+		      data-live-search="true"
+		      multiple>
+		{% else %}
+		<select class="selectpicker show-tick"
+			name="city"
+			title="Select City"
+			data-live-search="true"
+			multiple>
+		  {% endif %}
+		  {%- for city in cities %}
+		  {% if city == current_city %}
+		  <option value="{{ city }}"
+			  selected="selected">{{ city }}</option>
+		  {% else %}
+		  <option value="{{ city }}">{{ city }}</option>
+		  {% endif %}
+		  {%- endfor %}
+		</select>
+	    </div>
+	  </div>
+	</div>
+	
+	<div class="control-group">
+	  <div class="controls">
+	    <button type="submit btn" class="btn btn-primary">Search</button>
+	  </div>
+	</div>
+      </form>
+      
+      <div class="control-group">
+	<div class="controls">
+	  <button action="/trends"
+		  class="btn btn-danger"
+		  type="submit"
+		  onclick="window.location.href='trends'">Reset</button>
+	</div>
+      </div>
+    </div>
+    
+  
+    <div class="col-sm-6">
+      Should be next to the form
+      {% if current_state or current_city %}
+	<h3>{{ current_state }}</h3>
+	<h3>{{ current_city }}</h3>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

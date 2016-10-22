@@ -13,6 +13,16 @@
 <script src="/static/jquery.js"></script>
 <script src="/static/bootstrap.js"></script>
 
+<!-- Bootstrap-select -->
+<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css"
+      rel="stylesheet">
+<link rel="stylesheet" type="text/css" media="screen"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.9.3/css/bootstrap-select.min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.9.3/js/bootstrap-select.min.js"></script>
+
+
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
@@ -27,7 +37,7 @@
       <div class="nav-collapse collapse">
 	<ul class="nav">
 	  <li class="active"><a href="/">Home</a></li>
-	  <li><a href="/recipes">Your Recipes</a></li>
+	  <li><a href="/trends">Trends</a></li>
 	  <li><a href="/users">User Table</a></li>
 	  {% if user.is_authenticated %}
 	      <li><a href="/profile">Profile</a></li>
@@ -44,9 +54,12 @@
 </div>
 
 {%- for category, message in get_flashed_messages(with_categories=true) %}
-<p class="flask {{ category }}-flash">{{
+<div class="container">
+<p class="flask {{ category }}-flash" style="color:red;">{{
   "Error: " if category == 'error' }}{{ message }}</p>
 {%- endfor %}
+</div>
+
 <div id="main" class="container">
   {% block body %}{% endblock %}
   <hr>

@@ -48,7 +48,7 @@ class Review(db.Model):
     date = db.Column('date',db.DateTime)
     text = db.Column('text',db.Text)
     type = db.Column('type',db.String(80))
-    business_id = db.Column('business_id',db.String(80))
+    business_id = db.Column('business_id',db.ForeignKey('business.business_id'))
     
     def __init__(self, votes, user_id, review_id, stars, date, text, type, business_id):
         self.funny = votes.get('funny',0)
@@ -71,7 +71,6 @@ class Business(db.Model):
     full_address = db.Column('full_address', db.String(120))
     #TODO: hours = db.Column() Mon-Sun
     open = db.Column('open', db.Boolean)
-    #TODO: categories = db.Column() maybe worth making a new table
     city = db.Column('city', db.String(80))
     state = db.Column('state',db.String(80))
     name = db.Column('name', db.String(80))
@@ -80,7 +79,6 @@ class Business(db.Model):
     #TODO: neighborhoods = db.Column()
     lon = db.Column('lon',db.Float)
     lat = db.Column('lat',db.Float)
-    #TODO attributes
     #TODO ambience
     price_range = db.Column('price_range', db.Integer)
     type = db.Column('type', db.String(80))
@@ -101,6 +99,61 @@ class Business(db.Model):
         self.price_range = price_range
         self.type = type
 
+
+
+class Category(db.Model):
+    __tablename__ = 'category'
+
+    id = db.Column('id',db.Integer, primary_key=True)
+    business_id = db.Column('business_id',db.String(80),db.ForeignKey('business.business_id'))
+    category = db.Column('category', db.String(80))
     
+    def __init__(self, business_id, category):
+
+        self.business_id = business_id 
+        self.category = category
+
+class Attribute(db.Model):
+    __tablename__ = 'attribute'
+
+    id = db.Column('id',db.Integer, primary_key=True)
+    business_id = db.Column('business_id',db.String(80),db.ForeignKey('business.business_id'))
+    noise_level = db.Column('noise_level', db.String(80))
+    good_for_groups = db.Column('good_for_groups', db.Boolean)
+    delivery = db.Column('delivery', db.Boolean)
+    caters = db.Column('caters', db.Boolean)
+    alcohol = db.Column('alcohol', db.String(80))
+    reservations = db.Column('reservations', db.Boolean)
+    outdoor = db.Column('outdoor', db.Boolean)
+    credit_cards = db.Column('credit_cards', db.Boolean)
+    takeout = db.Column('takeout', db.Boolean)
+    tv = db.Column('tv', db.Boolean)
+    drivethru = db.Column('drivethru', db.Boolean)
+    attire = db.Column('attire', db.String(80))
+    good_for_kids = db.Column('good_for_kids', db.Boolean)
+    waiter = db.Column('waiter', db.Boolean)
+    
+    
+    def __init__(self, business_id, noise_level, good_for_groups, delivery,
+                 caters, alcohol, reservations, outdoor, credit_cards, takeout,
+                 tv, drivethru, attire, good_for_kids, waiter):
+        
+        self.business_id = business_id 
+        self.noise_level = noise_level 
+        self.good_for_groups = good_for_groups
+        self.delivery = delivery
+        self.caters = caters
+        self.alcohol = alcohol
+        self.reservations = reservations
+        self.outdoor = outdoor
+        self.credit_cards = credit_cards
+        self.takeout = takeout
+        self.tv = tv
+        self.drivethru = drivethru 
+        self.attire = attire
+        self.good_for_kids = good_for_kids
+        self.waiter = waiter
+
+        
 print('Creating DB')
 db.create_all()
