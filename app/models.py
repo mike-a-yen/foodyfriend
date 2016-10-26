@@ -154,6 +154,23 @@ class Attribute(db.Model):
         self.good_for_kids = good_for_kids
         self.waiter = waiter
 
+class Feature(db.Model):
+    __tablename__ = 'feature'
+
+    id = db.Column('id',db.Integer, primary_key=True)
+    business_id = db.Column('business_id',db.String(80),db.ForeignKey('business.business_id'))
+    phrase = db.Column('phrase', db.String(120))
+    pos = db.Column('pos', db.String(12))
+    positive = db.Column('positive',db.Integer)
+    count = db.Column('count',db.Integer)
+    def __init__(self, business_id, phrase, pos, positive, count):
+        
+        self.business_id = business_id 
+        self.phrase = phrase
+        self.pos = pos
+        self.positive = positive
+        self.count = count
+
         
 print('Creating DB')
 db.create_all()
